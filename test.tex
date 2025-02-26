@@ -1,0 +1,617 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{comment}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Theory HW 1 Q7}
+
+\author{\IEEEauthorblockN{Team 12}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{University of Houston}\\}
+}
+
+\maketitle
+
+\section{Question}
+%
+Write a greedy algorithm to compute the set cover with input k subsets of letters. Show an
+input example where the algorithm is slow. Show an input example where the algorithm is fast.
+
+
+
+\section{Pseudo-code}
+
+\textbf{GreedySetCover}
+\newline
+Input: A ground set U and collection of subsets S
+Output: A collection of sets C that covers U
+
+\begingroup
+\renewcommand\labelenumi{\theenumi:}
+\begin{enumerate}
+\item \textbf{function} GREEDYSETCOVER(U, S)  \label{item:1}
+\item C = null \label{item:2}
+\item while C != U do \label{item:3}
+\item \{ \label{item:4}
+\item \indent A = element of S that maximizes number of uncovered elements \label{item:5}
+\item \indent C = C U A \label{item:6}
+\item \indent \} \label{item:7}
+\item \indent return C \label{item:8}
+\end{enumerate}
+\endgroup
+
+\section{Algorithm}
+\begin{verbatim}
+  while GroundSet <> [] do
+  begin
+    bestIndex := 0;
+    bestCount := 0;
+    for i := 1 to NumberOfSubsets do
+    begin //This loop will potentially iterate for every subset
+      if not used[i] then //Boolean array corresponding to NumberOfSubsets
+      begin
+        tempCount := CountIntersection(S[i], U);
+        if tempCount > bestCount then
+        begin
+          bestCount := tempCount;
+          bestIndex := i;
+        end;
+      end;
+    end;
+\end{verbatim}
+
+
+\section{Input examples}
+Using the explanation from our textbook. We know, assuming there is a set of subsets that form the optimal cover, that there is at least one subset that that has at least (uncovered elements) / (number of subsets in optimum cover). Since this algorithm selects the subset that contains the most uncovered elements. Each iteration of the algorithm will cover that many elements. Thus, if we have fewer, larger subsets that include more values from our ground set, the program will iterate fewer times than if we have many subsets with few values. For example, for ground set U {a,b,c,d,e,f,g,h}, our program will run more quickly with subsets ${a,b,c,d}, {e,f,g,h}$ than subsets ${a}, {b}, {c}, {d}, {e}, {f}, {g}, {h}$.
+
+\section{Time Complexity}
+The time complexity of this algorithm is theta(tlog(n/t)) where t is the number of uncovered elements at beginning of iteration n and n/t represents the number of elements that are covered each iteration.
+
+\section{AI Tools Used}
+ChatGPT v3.5 was used to generate the Pascal code. Algorithms used come from Pandurangan 2022.
+
+\title{Theory HW 1 Q9}
+
+\author{\IEEEauthorblockN{Team 12}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{University of Houston}\\}
+}
+
+\maketitle
+
+\section{Question}
+%
+Show an example of MCM with n = 8 matrices where DP produces about the same result with
+a naive left-right multiplication.
+Show an example of MCM with n = 8 matrices where DP produces signficantly better performance than a naive left-right multiplication.
+Rewrite the MCM algortihm with recursion, instead of loops
+
+
+
+\section{Pseudo-code}
+
+\textbf{NaiveMCM}
+\newline
+Input: A sequence of matrix dimensions: p = p0..pn
+Output: The optimal cost to multiply Ai..Aj
+
+\begingroup
+\renewcommand\labelenumi{\theenumi:}
+\begin{enumerate}
+\item \textbf{function} NaiveMCM(p)  \label{item:1}
+\item if i == j \label{item:2}
+\item return 0 \label{item:3}
+\item m[i,j] = infinity \label{item:4}
+\item for k = i to j - 1 do \label{item:3}
+\item \{ \label{item:4}
+\item \indent q = NaiveMCM(p, i, k) + NaiveMCM(p, k+1, j) + PartialProducts\label{item:5}
+\item \indent \} \label{item:7}
+\item \indent if q < m[i,j] then \label{item:7}
+\item \indent m[i,j] = q \label{item:8}
+\item \indent return m[i,j] \label{item:8}
+\end{enumerate}
+\endgroup
+
+\textbf{IterativeMCM}
+\newline
+Input: A sequence of matrix dimensions p
+Output: The optimal cost to multiply A1..An
+
+\begingroup
+\renewcommand\labelenumi{\theenumi:}
+\begin{enumerate}
+\item \textbf{function} IterativeMCM(p)  \label{item:1}
+\item for i = 1 to n do \label{item:2}
+\item m[i,i] = 0 \label{item:3}
+\item for len = 2 to n do \label{item:4}
+\item \{ \label{item:4}
+\item for i = 1 to n - len + 1 do \label{item:4}
+\item \{ \label{item:4}
+\item j = i + len - 1 \label{item:4}
+\item m[i,j] = infinity \label{item:4}
+\item for k = i to j - 1 do\label{item:4}
+\item q = m[i,k] + m[k+1,j] + PartialProducts \label{item:4}
+\item if q < m[i,j] then \label{item:4}
+\item m[i,j] = q \label{item:4}
+\item \} \label{item:4}
+\item \} \label{item:4}
+\item return m[1,n] \label{item:4}
+\end{enumerate}
+\endgroup
+
+\textbf{MemoizationMCM}
+\newline
+Input: A sequence of matrix dimensions p
+Output: The optimal cost to multiply A1..An
+
+\begingroup
+\renewcommand\labelenumi{\theenumi:}
+\begin{enumerate}
+\item \textbf{function} MemoizationMCM(p)  \label{item:1}
+\item return MemoizationMCM(p, 1, n) \label{item:4}
+\item \textbf{function} MCMHelper(p, i, j)  \label{item:1}
+\item \{ \label{item:4}
+\item if m[i,j] == infinity \label{item:4}
+\item if i == j then
+\item m[i,j] = 0 \label{item:4}\label{item:4}
+\item else \label{item:4}
+\item \{ \label{item:4}
+\item for k = i to j - 1 do\label{item:4}
+\item left = MCMHelper(p, i, k) \label{item:4}
+\item right = MCMHelper(p, k+1, j \label{item:4}
+\item total = left + right + PartialProducts \label{item:4}
+\item if total < m[i,j] then \label{item:4}
+\item m[i,j] = total \label{item:4}
+\item return m[i,j] \label{item:4}
+\item \} \label{item:4}
+\item \} \label{item:4}
+\item return m[1,n] \label{item:4}
+\end{enumerate}
+\endgroup
+
+\section{Algorithm}
+\begin{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{ Function to multiply two matrices (Naive }
+function NaiveMCM(A: Matrix; RA, CA: integer; 
+B: Matrix; RB, CB: integer; var Result: Matrix): boolean;
+var
+  i, j, k: integer;
+begin
+  if CA <> RB then
+  begin
+    writeln('Matrix multiplication not possible');
+    NaiceMCM := false;
+    exit;
+  end;
+
+  { Initialize result matrix }
+  for i := 1 to RA do
+    for j := 1 to CB do
+      Result[i, j] := 0;
+
+  { Perform multiplication }
+  for i := 1 to RA do
+    for j := 1 to CB do
+      for k := 1 to CA do
+        Result[i, j] := Result[i, j] + (A[i, k] * B[k, j]);
+
+  NaiveMCM := true;
+end;
+
+function IterativeMCM(n: integer): LongInt;
+begin
+  { Initialize diagonal elements to 0, as cost of multiplying a single matrix is zero }
+  for i := 1 to n do
+    m[i, i] := 0;
+
+  { len is the length of the subchain being considered (starts from 2 matrices up to n) }
+  for len := 2 to n do
+  begin
+    for i := 1 to n - len + 1 do
+    begin
+      j := i + len - 1;
+      m[i, j] := INF; { Initialize to a large value }
+
+      for k := i to j - 1 do
+      begin
+        q := m[i, k] + m[k + 1, j] + (p[i - 1] * p[k] * p[j]);
+
+        if q < m[i, j] then
+          m[i, j] := q;
+      end;
+    end;
+  end;
+
+  { The minimum cost to multiply A1..An is stored in m[1, n] }
+  IterativeMCM := m[1, n];
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{ Recursive function with memoization to compute MCM }
+function RecursiveMCM(i, j: integer): LongInt;
+var
+  k, q: integer;
+begin
+  if i = j then
+    Exit(0); { Single matrix has zero multiplication cost }
+
+  if m[i, j] <> -1 then
+    Exit(m[i, j]); { Return already computed value }
+
+  m[i, j] := INF; { Initialize to infinity }
+
+  for k := i to j - 1 do
+  begin
+    q := RecursiveMCM(i, k) + RecursiveMCM(k + 1, j) + (p[i - 1] * p[k] * p[j]);
+    
+    if q < m[i, j] then
+      m[i, j] := q;
+  end;
+
+  Exit(m[i, j]);
+end;
+\end{verbatim}
+
+
+\section{Input examples}
+If all matrixes had the same dimensions, or were already arranged optimally. Then the naive implementation and dynamic implementations would produce the same results. If the matrixes all had different dimensions and were not arranged optimally than dynamic programming would produce far better results. The left columns below represents input of matrices that would result in similar performance between algorithms, the column on the right represents input that would benefit from dynamic programming.
+\begin{verbatim}
+1 = 10x10               1 = 10x100
+2 = 10x10               2 = 20x20
+3 = 10x10               3 = 10x500
+4 = 10x10               4 = 50x50
+5 = 10x10               5 = 120x40
+6 = 10x10               6 = 30x30
+7 = 10x10               7 = 100x100
+8 = 10x10               8 = 10x10
+\end{verbatim}
+
+\section{Time Complexity}
+The time complexity of this algorithm is $theta(n^2)$. We get this result because will iterate n times, each iteration will consist of n-k steps. We are able to achieve this because we do not solve the same problems more than once.
+
+\section{AI Tools Used}
+ChatGPT v3.5 was used to generate the Pascal code. Algorithms used come from Pandurangan 2022.
+
+\title{Theory HW 1 Q10 Part 1}
+
+\author{\IEEEauthorblockN{Team 12}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{University of Houston}\\}
+}
+
+\maketitle
+
+\section{Question}
+%
+Optimized recursion on overlapping subproblems:
+Fibonacci numbers: write a function with forward recursion simulating a loop, going from 1 to
+n, exploiting a table with partial results or 2 temporary variables. Then write a 2nd version with
+recursion, but storing the partial results with the memoization technique. Then write the slow
+classical recursive version with exponential. Show step by step examples choose some n
+random value s.t. 8 < n < 12 (different teams should choose different n!).
+
+
+
+
+\section{ForwardRecursiveFibonacci}
+
+\begin{verbatim}
+procedure ForwardFibonacci(n: Integer; a, b: Integer);
+var
+  temp: Integer;
+begin
+  if n > 0 then
+  begin
+    temp := a + b;  { Compute the next Fibonacci number }
+    Write(temp, ' '); { Output the Fibonacci number }
+    ForwardFibonacci(n - 1, b, temp); { Recursive call with updated values }
+  end;
+end;
+\end{verbatim}
+
+
+\section{MemoizationFibonacci}
+\begin{verbatim}
+function MemoizationFibonacci(n: Integer): Integer;
+begin
+  if memo[n] <> -1 then  { Check if the value is already computed }
+    Exit(memo[n]);
+
+  if (n = 0) then
+    memo[n] := 0
+  else if (n = 1) then
+    memo[n] := 1
+  else
+    memo[n] := MemoizationFibonacci(n - 1) +
+    MemoizationFibonacci(n - 2);  { Store computed value }
+
+  Exit(memo[n]);
+end;
+
+
+
+
+
+
+\end{verbatim}
+
+\section{SlowFibonacci}
+\begin{verbatim}
+function Fibonacci(n: Integer): Integer;
+begin
+  if (n = 0) then
+    Fibonacci := 0
+  else if (n = 1) then
+    Fibonacci := 1
+  else
+    Fibonacci := Fibonacci(n - 1) + Fibonacci(n - 2);  { Recursive calls }
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{verbatim}
+
+
+\section{Time Complexity}
+Forward Fibonacci utilizing the temporary variable has theta(n) of $n^2$ as it does not need to recalculate every Fibonacci number leading up to the one we are looking for, it calculates the Fibonacci number by storing the previous 2 variables in temporary variables. Memoization Fibonacci takes this a step further by storing Fibonacci values in a table that can be referenced every time the procedure is called. This procedure also has $n^2$ run time, but in practice is much faster than simple forward recursion. The slow recursive version has theta(n) of $2^n$.
+
+\section{AI Tools Used}
+ChatGPT v3.5 was used to generate the Pascal code. Algorithms used come from Pandurangan 2022.
+
+\title{Theory HW 1 Q10 Part 2}
+
+\author{\IEEEauthorblockN{Team 12}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{University of Houston}\\}
+}
+
+\maketitle
+
+\section{Question}
+%
+Optimized recursion on overlapping subproblems:
+Show a step by step example aligning two sequences of length 10 combining 5 symbols with
+optimized recursion (dynamic prog.) algorithm varying the gap score and mismatch scores.
+
+
+
+
+\section{Pseudo-code}
+
+\textbf{SimScoreDP}
+\newline
+Input: sequences s and t of lengths m and n
+\newline
+Output: sim(s, t)
+
+\begingroup
+\renewcommand\labelenumi{\theenumi:}
+\begin{enumerate}
+\item \textbf{function} SimScoreDP(s, t)  \label{item:1}
+\item for i = 0 to m do \label{item:2}
+\item a[i, 0] = -i  \label{item:3}
+\item for j = 0 to n do \label{item:4}
+\item a[0,j] = -j \label{item:4}
+\item for i = 1 to m do \label{item:4}
+\item \{ \label{item:4}
+\item for j = 1 to n do \label{item:4}
+\item \{ \label{item:4}
+\item both = a[i - 1, j - 1] + score(s[i], t[j]) \label{item:4}
+\item left = a[i, j - 1] + score(-, t[j]) \label{item:4}
+\item right = a[i - 1, j] + score(s[i], -) \label{item:4}
+\item a[i, j] = max(both, left, right) \label{item:4}
+\item \} \label{item:4}
+\item \} \label{item:4}
+\item return a[m, n] \label{item:4}
+\end{enumerate}
+\endgroup
+
+\section{Algorithm}
+\begin{verbatim}
+{ Function implementing dynamic programming 
+to compute similarity score }
+function SimScoreDP(s, t: string): integer;
+var
+  i, j: integer;
+begin
+  m := Length(s);
+  n := Length(t);
+
+  { Base case initialization }
+  for i := 0 to m do
+    a[i, 0] := -i; { Deletion penalty }
+
+  for j := 0 to n do
+    a[0, j] := -j; { Insertion penalty }
+
+  { Fill DP table using the given recurrence }
+  for i := 1 to m do
+  begin
+    for j := 1 to n do
+    begin
+      a[i, j] := Max(
+        { Diagonal (match/mismatch) }
+        a[i - 1, j - 1] + Score(s[i], t[j]),  
+        { Left (insertion) }
+        a[i, j - 1] + Score('-', t[j]),     
+        { Up (deletion) }
+        a[i - 1, j] + Score(s[i], '-')        
+      );
+    end;
+  end;
+
+  { Return final similarity score }
+  SimScoreDP := a[m, n];
+end;
+\end{verbatim}
+
+
+\section{Input examples}
+
+\begin{verbatim}
+Input
+s = AABCCBAABC
+t = ACCBBAABCC
+Output
+AABCC-BAAB-C
+-A-CCBBAABCC
+Score: 12
+
+Input
+s = ABCDEABCDE
+t = EDCBAEDCBA
+Output
+ABCDEA-BCDE
+EDC-BAEDCBA
+Score: -2
+
+Input
+s = AAABBBCCDD
+t = BBBAAACCDD
+Output
+AAABBB---CCDD
+---BBBAAACCDD
+Score: 8
+
+\end{verbatim}
+
+\section{Time Complexity}
+When implimented in this way, the time complexity of this algorithm is theta($n^2$)
+
+\section{AI Tools Used}
+ChatGPT v3.5 was used to generate the Pascal code. Algorithms used come from Pandurangan 2022.
+
+\end{document}
