@@ -1,0 +1,137 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{comment}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Theory HW 1 Q10 Part 1}
+
+\author{\IEEEauthorblockN{Team 12}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{University of Houston}\\}
+}
+
+\maketitle
+
+\section{Question}
+%
+Optimized recursion on overlapping subproblems:
+Fibonacci numbers: write a function with forward recursion simulating a loop, going from 1 to
+n, exploiting a table with partial results or 2 temporary variables. Then write a 2nd version with
+recursion, but storing the partial results with the memoization technique. Then write the slow
+classical recursive version with exponential. Show step by step examples choose some n
+random value s.t. 8 < n < 12 (different teams should choose different n!).
+
+
+
+
+\section{ForwardRecursiveFibonacci}
+
+\begin{verbatim}
+procedure ForwardFibonacci(n: Integer; a, b: Integer);
+var
+  temp: Integer;
+begin
+  if n > 0 then
+  begin
+    temp := a + b;  { Compute the next Fibonacci number }
+    Write(temp, ' '); { Output the Fibonacci number }
+    ForwardFibonacci(n - 1, b, temp); { Recursive call with updated values }
+  end;
+end;
+\end{verbatim}
+
+
+\section{MemoizationFibonacci}
+\begin{verbatim}
+function MemoizationFibonacci(n: Integer): Integer;
+begin
+  if memo[n] <> -1 then  { Check if the value is already computed }
+    Exit(memo[n]);
+
+  if (n = 0) then
+    memo[n] := 0
+  else if (n = 1) then
+    memo[n] := 1
+  else
+    memo[n] := MemoizationFibonacci(n - 1) +
+    MemoizationFibonacci(n - 2);  { Store computed value }
+
+  Exit(memo[n]);
+end;
+
+
+
+
+
+
+\end{verbatim}
+
+\section{SlowFibonacci}
+\begin{verbatim}
+function Fibonacci(n: Integer): Integer;
+begin
+  if (n = 0) then
+    Fibonacci := 0
+  else if (n = 1) then
+    Fibonacci := 1
+  else
+    Fibonacci := Fibonacci(n - 1) + Fibonacci(n - 2);  { Recursive calls }
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{verbatim}
+
+
+\section{Time Complexity}
+Forward Fibonacci utilizing the temporary variable has theta(n) of $n^2$ as it does not need to recalculate every Fibonacci number leading up to the one we are looking for, it calculates the Fibonacci number by storing the previous 2 variables in temporary variables. Memoization Fibonacci takes this a step further by storing Fibonacci values in a table that can be referenced every time the procedure is called. This procedure also has $n^2$ run time, but in practice is much faster than simple forward recursion. The slow recursive version has theta(n) of $2^n$.
+
+\section{AI Tools Used}
+ChatGPT v3.5 was used to generate the Pascal code. Algorithms used come from Pandurangan 2022.
+
+\end{document}

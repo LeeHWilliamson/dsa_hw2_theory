@@ -1,0 +1,83 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{comment}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Theory HW 1 Q7}
+
+\author{\IEEEauthorblockN{Team 12}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{University of Houston}\\}
+}
+
+\maketitle
+
+\section{Question}
+%
+Write a greedy algorithm to compute the set cover with input k subsets of letters. Show an
+input example where the algorithm is slow. Show an input example where the algorithm is fast.
+
+
+
+\section{Pseudo-code}
+
+\textbf{GreedySetCover}
+\newline
+Input: A ground set U and collection of subsets S
+Output: A collection of sets C that covers U
+
+\begingroup
+\renewcommand\labelenumi{\theenumi:}
+\begin{enumerate}
+\item \textbf{function} GREEDYSETCOVER(U, S)  \label{item:1}
+\item C = null \label{item:2}
+\item while C != U do \label{item:3}
+\item \{ \label{item:4}
+\item \indent A = element of S that maximizes number of uncovered elements \label{item:5}
+\item \indent C = C U A \label{item:6}
+\item \indent \} \label{item:7}
+\item \indent return C \label{item:8}
+\end{enumerate}
+\endgroup
+
+\section{Algorithm}
+\begin{verbatim}
+  while GroundSet <> [] do
+  begin
+    bestIndex := 0;
+    bestCount := 0;
+    for i := 1 to NumberOfSubsets do
+    begin //This loop will potentially iterate for every subset
+      if not used[i] then //Boolean array corresponding to NumberOfSubsets
+      begin
+        tempCount := CountIntersection(S[i], U);
+        if tempCount > bestCount then
+        begin
+          bestCount := tempCount;
+          bestIndex := i;
+        end;
+      end;
+    end;
+\end{verbatim}
+
+
+\section{Input examples}
+Using the explanation from our textbook. We know, assuming there is a set of subsets that form the optimal cover, that there is at least one subset that that has at least (uncovered elements) / (number of subsets in optimum cover). Since this algorithm selects the subset that contains the most uncovered elements. Each iteration of the algorithm will cover that many elements. Thus, if we have fewer, larger subsets that include more values from our ground set, the program will iterate fewer times than if we have many subsets with few values. For example, for ground set U {a,b,c,d,e,f,g,h}, our program will run more quickly with subsets ${a,b,c,d}, {e,f,g,h}$ than subsets ${a}, {b}, {c}, {d}, {e}, {f}, {g}, {h}$.
+
+\section{Time Complexity}
+The time complexity of this algorithm is theta(tlog(n/t)) where t is the number of uncovered elements at beginning of iteration n and n/t represents the number of elements that are covered each iteration.
+
+\section{AI Tools Used}
+ChatGPT v3.5 was used to generate the Pascal code. Algorithms used come from Pandurangan 2022.
+
+\end{document}

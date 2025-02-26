@@ -1,0 +1,138 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{comment}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Theory HW 1 Q10 Part 2}
+
+\author{\IEEEauthorblockN{Team 12}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{University of Houston}\\}
+}
+
+\maketitle
+
+\section{Question}
+%
+Optimized recursion on overlapping subproblems:
+Show a step by step example aligning two sequences of length 10 combining 5 symbols with
+optimized recursion (dynamic prog.) algorithm varying the gap score and mismatch scores.
+
+
+
+
+\section{Pseudo-code}
+
+\textbf{SimScoreDP}
+\newline
+Input: sequences s and t of lengths m and n
+\newline
+Output: sim(s, t)
+
+\begingroup
+\renewcommand\labelenumi{\theenumi:}
+\begin{enumerate}
+\item \textbf{function} SimScoreDP(s, t)  \label{item:1}
+\item for i = 0 to m do \label{item:2}
+\item a[i, 0] = -i  \label{item:3}
+\item for j = 0 to n do \label{item:4}
+\item a[0,j] = -j \label{item:4}
+\item for i = 1 to m do \label{item:4}
+\item \{ \label{item:4}
+\item for j = 1 to n do \label{item:4}
+\item \{ \label{item:4}
+\item both = a[i - 1, j - 1] + score(s[i], t[j]) \label{item:4}
+\item left = a[i, j - 1] + score(-, t[j]) \label{item:4}
+\item right = a[i - 1, j] + score(s[i], -) \label{item:4}
+\item a[i, j] = max(both, left, right) \label{item:4}
+\item \} \label{item:4}
+\item \} \label{item:4}
+\item return a[m, n] \label{item:4}
+\end{enumerate}
+\endgroup
+
+\section{Algorithm}
+\begin{verbatim}
+{ Function implementing dynamic programming 
+to compute similarity score }
+function SimScoreDP(s, t: string): integer;
+var
+  i, j: integer;
+begin
+  m := Length(s);
+  n := Length(t);
+
+  { Base case initialization }
+  for i := 0 to m do
+    a[i, 0] := -i; { Deletion penalty }
+
+  for j := 0 to n do
+    a[0, j] := -j; { Insertion penalty }
+
+  { Fill DP table using the given recurrence }
+  for i := 1 to m do
+  begin
+    for j := 1 to n do
+    begin
+      a[i, j] := Max(
+        { Diagonal (match/mismatch) }
+        a[i - 1, j - 1] + Score(s[i], t[j]),  
+        { Left (insertion) }
+        a[i, j - 1] + Score('-', t[j]),     
+        { Up (deletion) }
+        a[i - 1, j] + Score(s[i], '-')        
+      );
+    end;
+  end;
+
+  { Return final similarity score }
+  SimScoreDP := a[m, n];
+end;
+\end{verbatim}
+
+
+\section{Input examples}
+
+\begin{verbatim}
+Input
+s = AABCCBAABC
+t = ACCBBAABCC
+Output
+AABCC-BAAB-C
+-A-CCBBAABCC
+Score: 12
+
+Input
+s = ABCDEABCDE
+t = EDCBAEDCBA
+Output
+ABCDEA-BCDE
+EDC-BAEDCBA
+Score: -2
+
+Input
+s = AAABBBCCDD
+t = BBBAAACCDD
+Output
+AAABBB---CCDD
+---BBBAAACCDD
+Score: 8
+
+\end{verbatim}
+
+\section{Time Complexity}
+When implimented in this way, the time complexity of this algorithm is theta($n^2$)
+
+\section{AI Tools Used}
+ChatGPT v3.5 was used to generate the Pascal code. Algorithms used come from Pandurangan 2022.
+\end{document}
